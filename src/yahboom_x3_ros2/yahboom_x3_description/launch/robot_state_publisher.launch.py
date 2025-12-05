@@ -2,37 +2,33 @@ import os
 import launch as l
 import pathlib as p
 import launch_ros as lr
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.parameter_descriptions import ParameterValue
+from ament_index_python.packages import get_package_share_directory
 
 def process_ros2_controllers_config(context):
     # Get the configuration values
-    prefix = l.substitutions.LaunchConfiguration('prefix').perform(context)
-    robot_name = l.substitutions.LaunchConfiguration('robot_name').perform(context)
-    enable_odom_tf = l.substitutions.LaunchConfiguration('enable_odom_tf').perform(context)
+    # prefix = l.substitutions.LaunchConfiguration('prefix').perform(context)
+    # robot_name = l.substitutions.LaunchConfiguration('robot_name').perform(context)
+    # enable_odom_tf = l.substitutions.LaunchConfiguration('enable_odom_tf').perform(context)
 
-    home = str(p.Path.home())
+    # # Use ament_index to find package paths dynamically
+    # description_share = get_package_share_directory('yahboom_x3_description')
+    # config_path = os.path.join(description_share, 'config', robot_name)
+    # template_path = os.path.join(config_path, 'ros2_controllers_template.yaml')
+    # with open(template_path, 'r', encoding='utf-8') as f:
+    #     template_content = f.read()
+    #     f.close()
 
-    # Define both source and install paths
-    src_config_path = os.path.join(home, 'ros2_ws/src/yahboom_rosmaster/yahboom_rosmaster_description/config', robot_name)
-    install_config_path = os.path.join(home, 'ros2_ws/install/yahboom_rosmaster_description/share/yahboom_rosmaster_description/config', robot_name)
+    # # Create processed content (leaving template untouched)
+    # processed_content = template_content.replace('${prefix}', prefix)
+    # processed_content = processed_content.replace('enable_odom_tf: true', f'enable_odom_tf: {enable_odom_tf}')
 
-    # Read from source template
-    template_path = os.path.join(src_config_path, 'ros2_controllers_template.yaml')
-    with open(template_path, 'r', encoding='utf-8') as f:
-        template_content = f.read()
-        f.close()
-
-    # Create processed content (leaving template untouched)
-    processed_content = template_content.replace('${prefix}', prefix)
-    processed_content = processed_content.replace('enable_odom_tf: true', f'enable_odom_tf: {enable_odom_tf}')
-
-    # Write processed content to both source and install directories
-    for config_path in [src_config_path, install_config_path]:
-        os.makedirs(config_path, exist_ok=True)
-        output_path = os.path.join(config_path, 'ros2_controllers.yaml')
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(processed_content)
-            f.close()
+    # os.makedirs(config_path, exist_ok=True)
+    # output_path = os.path.join(config_path, 'ros2_controllers.yaml')
+    # with open(output_path, 'w', encoding='utf-8') as f:
+    #     f.write(processed_content)
+    #     f.close()
     return []
 
 # Define the arguments for the XACRO file
@@ -51,20 +47,20 @@ def generate_launch_description():
 
     # Set paths to important files
     pkg_share_description = lr.substitutions.FindPackageShare(urdf_package)
-    default_urdf_model_path = lr.substitutions.PathJoinSubstitution([pkg_share_description, 'urdf', 'robots', urdf_filename])
-    default_rviz_config_path = lr.substitutions.PathJoinSubstitution([pkg_share_description, 'rviz', rviz_config_filename])
+    default_urdf_model_path = PathJoinSubstitution([pkg_share_description, 'urdf', 'robots', urdf_filename])
+    default_rviz_config_path = PathJoinSubstitution([pkg_share_description, 'rviz', rviz_config_filename])
 
     # Launch configuration variables
-    jsp_gui = lr.substitutions.LaunchConfiguration('jsp_gui')
-    rviz_config_file = lr.substitutions.LaunchConfiguration('rviz_config_file')
-    urdf_model = lr.substitutions.LaunchConfiguration('urdf_model')
-    use_jsp = lr.substitutions.LaunchConfiguration('use_jsp')
-    use_rviz = lr.substitutions.LaunchConfiguration('use_rviz')
-    use_sim_time = lr.substitutions.LaunchConfiguration('use_sim_time')
+    joint_state_publisher_gui = LaunchConfiguration('joint_state_publisher_gui')
+    rviz_config_file = LaunchConfiguration('rviz_config_file')
+    urdf_model = LaunchConfiguration('urdf_model')
+    use_joint_state_publisher = LaunchConfiguration('use_joint_state_publisher')
+    use_rviz = LaunchConfiguration('use_rviz')
+    use_sim_time = LaunchConfiguration('use_sim_time')
 
     # Declare the launch arguments
-    declare_jsp_gui_cmd = l.actions.DeclareLaunchArgument(
-        name='jsp_gui',
+    declare_joint_state_publisher_gui_cmd = l.actions.DeclareLaunchArgument(
+        name='joint_state_publisher_gui',
         default_value='true',
         choices=['true', 'false'],
         description='Flag to enable joint_state_publisher_gui')
@@ -79,8 +75,8 @@ def generate_launch_description():
         default_value=default_urdf_model_path,
         description='Absolute path to robot urdf file')
     
-    declare_use_jsp_cmd = l.actions.DeclareLaunchArgument(
-        name='use_jsp',
+    declare_use_joint_state_publisher_cmd = l.actions.DeclareLaunchArgument(
+        name='use_joint_state_publisher',
         default_value='false',
         choices=['true', 'false'],
         description='Enable the joint state publisher')
@@ -119,7 +115,7 @@ def generate_launch_description():
         executable='joint_state_publisher',
         name='joint_state_publisher',
         parameters=[{'use_sim_time': use_sim_time}],
-        condition=l.conditions.IfCondition(use_jsp))
+        condition=l.conditions.IfCondition(use_joint_state_publisher))
 
     # Depending on gui parameter, either launch joint_state_publisher or joint_state_publisher_gui
     start_joint_state_publisher_gui_cmd = lr.actions.Node(
@@ -127,7 +123,7 @@ def generate_launch_description():
         executable='joint_state_publisher_gui',
         name='joint_state_publisher_gui',
         parameters=[{'use_sim_time': use_sim_time}],
-        condition=l.conditions.IfCondition(jsp_gui))
+        condition=l.conditions.IfCondition(joint_state_publisher_gui))
 
     # Launch RViz
     start_rviz_cmd = lr.actions.Node(
@@ -146,10 +142,10 @@ def generate_launch_description():
     ld.add_action(l.actions.OpaqueFunction(function=process_ros2_controllers_config))
 
     # Declare the launch options
-    ld.add_action(declare_jsp_gui_cmd)
+    ld.add_action(declare_joint_state_publisher_gui_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
     ld.add_action(declare_urdf_model_path_cmd)
-    ld.add_action(declare_use_jsp_cmd) 
+    ld.add_action(declare_use_joint_state_publisher_cmd) 
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(declare_use_sim_time_cmd)
 
