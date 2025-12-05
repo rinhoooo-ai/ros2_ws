@@ -11,11 +11,18 @@ def process_ros2_controllers_config(context):
     # prefix = l.substitutions.LaunchConfiguration('prefix').perform(context)
     # robot_name = l.substitutions.LaunchConfiguration('robot_name').perform(context)
     # enable_odom_tf = l.substitutions.LaunchConfiguration('enable_odom_tf').perform(context)
+    # prefix = l.substitutions.LaunchConfiguration('prefix').perform(context)
+    # robot_name = l.substitutions.LaunchConfiguration('robot_name').perform(context)
+    # enable_odom_tf = l.substitutions.LaunchConfiguration('enable_odom_tf').perform(context)
 
-    # # Use ament_index to find package paths dynamically
-    # description_share = get_package_share_directory('yahboom_x3_description')
-    # config_path = os.path.join(description_share, 'config', robot_name)
-    # template_path = os.path.join(config_path, 'ros2_controllers_template.yaml')
+    # home = str(p.Path.home())
+
+    # # Define both source and install paths
+    # src_config_path = os.path.join(home, 'ros2_ws/src/yahboom_rosmaster/yahboom_rosmaster_description/config', robot_name)
+    # install_config_path = os.path.join(home, 'ros2_ws/install/yahboom_rosmaster_description/share/yahboom_rosmaster_description/config', robot_name)
+
+    # # Read from source template
+    # template_path = os.path.join(src_config_path, 'ros2_controllers_template.yaml')
     # with open(template_path, 'r', encoding='utf-8') as f:
     #     template_content = f.read()
     #     f.close()
@@ -24,11 +31,13 @@ def process_ros2_controllers_config(context):
     # processed_content = template_content.replace('${prefix}', prefix)
     # processed_content = processed_content.replace('enable_odom_tf: true', f'enable_odom_tf: {enable_odom_tf}')
 
-    # os.makedirs(config_path, exist_ok=True)
-    # output_path = os.path.join(config_path, 'ros2_controllers.yaml')
-    # with open(output_path, 'w', encoding='utf-8') as f:
-    #     f.write(processed_content)
-    #     f.close()
+    # # Write processed content to both source and install directories
+    # for config_path in [src_config_path, install_config_path]:
+    #     os.makedirs(config_path, exist_ok=True)
+    #     output_path = os.path.join(config_path, 'ros2_controllers.yaml')
+    #     with open(output_path, 'w', encoding='utf-8') as f:
+    #         f.write(processed_content)
+    #         f.close()
     return []
 
 # Define the arguments for the XACRO file
@@ -47,16 +56,16 @@ def generate_launch_description():
 
     # Set paths to important files
     pkg_share_description = lr.substitutions.FindPackageShare(urdf_package)
-    default_urdf_model_path = PathJoinSubstitution([pkg_share_description, 'urdf', 'robots', urdf_filename])
-    default_rviz_config_path = PathJoinSubstitution([pkg_share_description, 'rviz', rviz_config_filename])
+    default_urdf_model_path = l.substitutions.PathJoinSubstitution([pkg_share_description, 'urdf', 'robots', urdf_filename])
+    default_rviz_config_path = l.substitutions.PathJoinSubstitution([pkg_share_description, 'rviz', rviz_config_filename])
 
     # Launch configuration variables
-    joint_state_publisher_gui = LaunchConfiguration('joint_state_publisher_gui')
-    rviz_config_file = LaunchConfiguration('rviz_config_file')
-    urdf_model = LaunchConfiguration('urdf_model')
-    use_joint_state_publisher = LaunchConfiguration('use_joint_state_publisher')
-    use_rviz = LaunchConfiguration('use_rviz')
-    use_sim_time = LaunchConfiguration('use_sim_time')
+    jsp_gui = l.substitutions.LaunchConfiguration('jsp_gui')
+    rviz_config_file = l.substitutions.LaunchConfiguration('rviz_config_file')
+    urdf_model = l.substitutions.LaunchConfiguration('urdf_model')
+    use_jsp = l.substitutions.LaunchConfiguration('use_jsp')
+    use_rviz = l.substitutions.LaunchConfiguration('use_rviz')
+    use_sim_time = l.substitutions.LaunchConfiguration('use_sim_time')
 
     # Declare the launch arguments
     declare_joint_state_publisher_gui_cmd = l.actions.DeclareLaunchArgument(

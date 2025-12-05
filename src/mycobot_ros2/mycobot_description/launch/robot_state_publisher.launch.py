@@ -5,25 +5,30 @@ from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
 
 def process_ros2_controllers_config(context):
-    prefix = l.substitutions.LaunchConfiguration('prefix').perform(context)
-    flange_link = l.substitutions.LaunchConfiguration('flange_link').perform(context)
-    robot_name = l.substitutions.LaunchConfiguration('robot_name').perform(context)
+    # prefix = l.substitutions.LaunchConfiguration('prefix').perform(context)
+    # flange_link = l.substitutions.LaunchConfiguration('flange_link').perform(context)
+    # robot_name = l.substitutions.LaunchConfiguration('robot_name').perform(context)
 
-    # Use ament_index to find package paths dynamically
-    moveit_config_share = get_package_share_directory('mycobot_description')
-    config_path = os.path.join(moveit_config_share, 'config', robot_name)
-    # template_path = os.path.join(config_path, 'ros2_controllers_template.yaml')
+    # home = str(p.Path.home())
+
+    # src_config_path = os.path.join(home, 'ros2_ws/src/mycobot_ros2/mycobot_moveit_config/config', robot_name)
+    # install_config_path = os.path.join(home, 'ros2_ws/install/mycobot_moveit_config/share/mycobot_moveit_config/config', robot_name)
+    # template_path = os.path.join(src_config_path, 'ros2_controllers_template.yaml')
+
     # with open(template_path, 'r', encoding='utf-8') as f:
     #     template_content = f.read()
     #     f.close()
 
     # processed_content = template_content.replace('${prefix}', prefix)
     # processed_content = processed_content.replace('${flange_link}', flange_link)
+    # processed_content = template_content.replace('${prefix}', prefix)
+    # processed_content = processed_content.replace('${flange_link}', flange_link)
 
-    # os.makedirs(config_path, exist_ok=True)
-    # output_path = os.path.join(config_path, 'ros2_controllers.yaml')
-    # with open(output_path, 'w', encoding='utf-8') as file:
-    #     file.write(processed_content)
+    # for config_path in [src_config_path, install_config_path]:
+    #     os.makedirs(config_path, exist_ok=True)
+    #     output_path = os.path.join(config_path, 'ros2_controllers.yaml')
+    #     with open(output_path, 'w', encoding='utf-8') as file:
+    #         file.write(processed_content)
     return []
 
 ARGUMENTS = [
@@ -31,6 +36,7 @@ ARGUMENTS = [
     l.actions.DeclareLaunchArgument('prefix', default_value='', description='Prefix for robot joints and links'),
     l.actions.DeclareLaunchArgument('add_world', default_value='true', choices=['true', 'false'], description='Whether to add world link'),
     l.actions.DeclareLaunchArgument('base_link', default_value='base_link', description='Name of the base link'),
+    l.actions.DeclareLaunchArgument('base_type', default_value='G_shape', description='Type of base'),
     l.actions.DeclareLaunchArgument('base_type', default_value='G_shape', description='Type of base'),
     l.actions.DeclareLaunchArgument('flange_link', default_value='link6_flange', description='Name of the flange link'),
     l.actions.DeclareLaunchArgument('gripper_type', default_value='adaptive_gripper', description='Type of the gripper'),
@@ -50,7 +56,7 @@ def generate_launch_description():
 
     joint_state_publisher_gui = l.substitutions.LaunchConfiguration('joint_state_publisher_gui')
     rviz_config_file = l.substitutions.LaunchConfiguration('rviz_config_file')
-    urdf_model = l.substitutions.LaunchConfiguration('urdf_model')
+    urdf_model_path = l.substitutions.LaunchConfiguration('urdf_model_path')
     use_joint_state_publisher = l.substitutions.LaunchConfiguration('use_joint_state_publisher')
     use_rviz = l.substitutions.LaunchConfiguration('use_rviz')
     use_sim_time = l.substitutions.LaunchConfiguration('use_sim_time')
@@ -64,7 +70,7 @@ def generate_launch_description():
 
     robot_description_content = ParameterValue(
         value=l.substitutions.Command(command=[
-            'xacro', ' ', urdf_model, ' ', 'robot_name:=', l.substitutions.LaunchConfiguration('robot_name'), ' ', 'prefix:=', l.substitutions.LaunchConfiguration('prefix'), ' ', 'add_world:=', l.substitutions.LaunchConfiguration('add_world'), ' ', 'base_link:=', l.substitutions.LaunchConfiguration('base_link'), ' ', 'base_type:=', l.substitutions.LaunchConfiguration('base_type'), ' ', 'flange_link:=', l.substitutions.LaunchConfiguration('flange_link'), ' ', 'gripper_type:=', l.substitutions.LaunchConfiguration('gripper_type'), ' ', 'use_camera:=', l.substitutions.LaunchConfiguration('use_camera'), ' ', 'use_gazebo:=', l.substitutions.LaunchConfiguration('use_gazebo'), ' ', 'use_gripper:=', l.substitutions.LaunchConfiguration('use_gripper')
+            'xacro', ' ', urdf_model_path, ' ', 'robot_name:=', l.substitutions.LaunchConfiguration('robot_name'), ' ', 'prefix:=', l.substitutions.LaunchConfiguration('prefix'), ' ', 'add_world:=', l.substitutions.LaunchConfiguration('add_world'), ' ', 'base_link:=', l.substitutions.LaunchConfiguration('base_link'), ' ', 'base_type:=', l.substitutions.LaunchConfiguration('base_type'), ' ', 'flange_link:=', l.substitutions.LaunchConfiguration('flange_link'), ' ', 'gripper_type:=', l.substitutions.LaunchConfiguration('gripper_type'), ' ', 'use_camera:=', l.substitutions.LaunchConfiguration('use_camera'), ' ', 'use_gazebo:=', l.substitutions.LaunchConfiguration('use_gazebo'), ' ', 'use_gripper:=', l.substitutions.LaunchConfiguration('use_gripper')
         ]), value_type=str
     )
 
