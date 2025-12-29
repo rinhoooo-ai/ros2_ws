@@ -32,13 +32,13 @@
       </inertial>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_base.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_base.dae"/>
         </geometry>
         <origin xyz="0 0 -0.012" rpy="0 0 0"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_base.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_base.dae"/>
         </geometry>
         <origin xyz="0 0 -0.012" rpy="0 0 0"/>
       </collision>
@@ -50,18 +50,17 @@
       <xacro:insert_block name="origin"/>
     </joint>
 
-    <!-- 左手指 -->
     <link name="${prefix}gripper_left1">
       <xacro:gripper_link_inertial/>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_left1.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_left1.dae"/>
         </geometry>
         <origin xyz="0.039 -0.0133 -0.012" rpy="0 0 0"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_left1.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_left1.dae"/>
         </geometry>
         <origin xyz="0.039 -0.0133 -0.012" rpy="0 0 0"/>
       </collision>
@@ -71,13 +70,13 @@
       <xacro:gripper_link_inertial/>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_left2.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_left2.dae"/>
         </geometry>
         <origin xyz="0.005 -0.0195 -0.012" rpy="0 0 0"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_left2.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_left2.dae"/>
         </geometry>
         <origin xyz="0.005 -0.0195 -0.012" rpy="0 0 0"/>
       </collision>
@@ -87,13 +86,13 @@
       <xacro:gripper_link_inertial/>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_left3.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_left3.dae"/>
         </geometry>
         <origin xyz="0.012 0.0025 -0.012" rpy="0 0 0"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_left3.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_left3.dae"/>
         </geometry>
         <origin xyz="0.012 0.0025 -0.012" rpy="0 0 0"/>
       </collision>
@@ -104,13 +103,13 @@
       <xacro:gripper_link_inertial/>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_right1.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_right1.dae"/>
         </geometry>
         <origin xyz="-0.039 -0.0133 -0.012" rpy="0 0 0"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_right1.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_right1.dae"/>
         </geometry>
         <origin xyz="-0.039 -0.0133 -0.012" rpy="0 0 0"/>
       </collision>
@@ -120,13 +119,13 @@
       <xacro:gripper_link_inertial/>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_right2.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_right2.dae"/>
         </geometry>
         <origin xyz="-0.005 -0.0195 -0.012" rpy="0 0 0"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_right2.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_right2.dae"/>
         </geometry>
         <origin xyz="-0.005 -0.0195 -0.012" rpy="0 0 0"/>
       </collision>
@@ -136,13 +135,13 @@
       <xacro:gripper_link_inertial/>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_right3.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_right3.dae"/>
         </geometry>
         <origin xyz="-0.012 0.0025 -0.012" rpy="0 0 0"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/adaptive_gripper/visual/gripper_right3.dae"/>
+          <mesh filename="package://mycobot_description/meshes/adaptive_gripper/visual/gripper_right3.dae"/>
         </geometry>
         <origin xyz="-0.012 0.0025 -0.012" rpy="0 0 0"/>
       </collision>

@@ -5,30 +5,30 @@ from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
 
 def process_ros2_controllers_config(context):
-    # prefix = l.substitutions.LaunchConfiguration('prefix').perform(context)
-    # flange_link = l.substitutions.LaunchConfiguration('flange_link').perform(context)
-    # robot_name = l.substitutions.LaunchConfiguration('robot_name').perform(context)
+    prefix = l.substitutions.LaunchConfiguration('prefix').perform(context)
+    flange_link = l.substitutions.LaunchConfiguration('flange_link').perform(context)
+    robot_name = l.substitutions.LaunchConfiguration('robot_name').perform(context)
 
-    # home = str(p.Path.home())
+    # Get the package share directory dynamically
+    pkg_share_moveit = get_package_share_directory('mycobot_moveit_config')
+    
+    config_base_path = os.path.join(pkg_share_moveit, 'config', robot_name)
+    template_path = os.path.join(config_base_path, 'ros2_controllers_template.yaml')
 
-    # src_config_path = os.path.join(home, 'ros2_ws/src/mycobot_ros2/mycobot_moveit_config/config', robot_name)
-    # install_config_path = os.path.join(home, 'ros2_ws/install/mycobot_moveit_config/share/mycobot_moveit_config/config', robot_name)
-    # template_path = os.path.join(src_config_path, 'ros2_controllers_template.yaml')
+    with open(template_path, 'r', encoding='utf-8') as f:
+        template_content = f.read()
+        f.close()
 
-    # with open(template_path, 'r', encoding='utf-8') as f:
-    #     template_content = f.read()
-    #     f.close()
+    processed_content = template_content.replace('${prefix}', prefix)
+    processed_content = processed_content.replace('${flange_link}', flange_link)
+    processed_content = template_content.replace('${prefix}', prefix)
+    processed_content = processed_content.replace('${flange_link}', flange_link)
 
-    # processed_content = template_content.replace('${prefix}', prefix)
-    # processed_content = processed_content.replace('${flange_link}', flange_link)
-    # processed_content = template_content.replace('${prefix}', prefix)
-    # processed_content = processed_content.replace('${flange_link}', flange_link)
-
-    # for config_path in [src_config_path, install_config_path]:
-    #     os.makedirs(config_path, exist_ok=True)
-    #     output_path = os.path.join(config_path, 'ros2_controllers.yaml')
-    #     with open(output_path, 'w', encoding='utf-8') as file:
-    #         file.write(processed_content)
+    # Write processed config to the install directory
+    os.makedirs(config_base_path, exist_ok=True)
+    output_path = os.path.join(config_base_path, 'ros2_controllers.yaml')
+    with open(output_path, 'w', encoding='utf-8') as file:
+        file.write(processed_content)
     return []
 
 ARGUMENTS = [
@@ -50,7 +50,7 @@ def generate_launch_description():
     urdf_filename = 'mycobot_280.urdf.xacro'
     rviz_config_filename = 'mycobot_280_description.rviz'
 
-    package_share_description = lr.substitutions.FindPackageShare(urdf_package)
+    package_share_description = lr.substitutions.FindPackageShare(urdf_package) #.find(urdf_package)
     default_urdf_model_path = l.substitutions.PathJoinSubstitution([package_share_description, 'urdf', 'robots', urdf_filename])
     default_rviz_config_path = l.substitutions.PathJoinSubstitution([package_share_description, 'rviz', rviz_config_filename])
 
@@ -61,9 +61,9 @@ def generate_launch_description():
     use_rviz = l.substitutions.LaunchConfiguration('use_rviz')
     use_sim_time = l.substitutions.LaunchConfiguration('use_sim_time')
 
-    declare_joint_state_publisher_gui_cmd = l.actions.DeclareLaunchArgument(name='joint_state_publisher_gui', default_value='true', choices=['true', 'false'], description='Flag to enable joint_state_publisher_gui')
+    declare_joint_state_publisher_gui_cmd = l.actions.DeclareLaunchArgument(name='joint_state_publisher_gui', default_value='false', choices=['true', 'false'], description='Flag to enable joint_state_publisher_gui')
     declare_rviz_config_file = l.actions.DeclareLaunchArgument(name='rviz_config_file', default_value=default_rviz_config_path, description='Full path to the RVIZ config file to use')
-    declare_urdf_model_path = l.actions.DeclareLaunchArgument(name='urdf_model', default_value=default_urdf_model_path, description='Absolute path to robot urdf file')
+    declare_urdf_model_path = l.actions.DeclareLaunchArgument(name='urdf_model_path', default_value=default_urdf_model_path, description='Absolute path to robot urdf file')
     declare_use_joint_state_publisher = l.actions.DeclareLaunchArgument(name='use_joint_state_publisher', default_value='false', choices=['true', 'false'], description='Enable the joint state publisher')
     declare_use_rviz = l.actions.DeclareLaunchArgument(name='use_rviz', default_value='true', choices=['true', 'false'], description='Whether to start RVIZ')
     declare_use_sim_time = l.actions.DeclareLaunchArgument(name='use_sim_time', default_value='false', description='Use simulation (Gazebo) clock if true')

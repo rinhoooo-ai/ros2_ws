@@ -39,14 +39,14 @@
       <visual>
         <geometry>
         <!--- 0.0 0 -0.04  ${pi/2} 3.14159-->
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint1.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint1.dae"/>
         </geometry>
         <origin xyz = "0.0 0 0 " rpy = " 0 0 ${-pi/2}"/>
       </visual>
       <collision>
         <geometry>
         <!--- 0.0 0 -0.04  ${pi/2} 3.14159-->
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint1.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint1.dae"/>
         </geometry>
         <origin xyz = "0.0 0 0 " rpy = " 0 0 ${-pi/2}"/>
       </collision>
@@ -56,13 +56,13 @@
       <xacro:link_inertial mass="${link2_mass}" ixx="0.000148" iyy="0.000148" izz="0.000096"/>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint2.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint2.dae"/>
         </geometry>
         <origin xyz = "0.0 0 -0.06096 " rpy = " 0 0 ${-pi/2}"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint2.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint2.dae"/>
         </geometry>
         <origin xyz = "0.0 0 -0.06096 " rpy = " 0 0 ${-pi/2}"/>
       </collision>
@@ -72,13 +72,13 @@
       <xacro:link_inertial mass="${link3_mass}" ixx="0.000148" iyy="0.000148" izz="0.000096"/>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint3.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint3.dae"/>
         </geometry>
       <origin xyz = "0.0 0 0.03256 " rpy = " 0 ${-pi/2} 0"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint3.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint3.dae"/>
         </geometry>
         <origin xyz = "0.0 0 0.03256 " rpy = " 0 ${-pi/2} 0"/>
       </collision>
@@ -89,14 +89,14 @@
       <visual>
         <geometry>
           <!--- 0.0 0 -0.04 -->
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint4.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint4.dae"/>
         </geometry>
         <origin xyz = "0.0 0 0.03056 " rpy = " 0 ${-pi/2} 0"/>
       </visual>
         <collision>
         <geometry>
           <!--- 0.0 0 -0.04 -->
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint4.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint4.dae"/>
         </geometry>
         <origin xyz = "0.0 0 0.03056 " rpy = " 0 ${-pi/2} 0"/>
       </collision>
@@ -107,14 +107,14 @@
     <visual>
       <geometry>
         <!--- 0.0 0 -0.04 -->
-        <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint5.dae"/>
+        <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint5.dae"/>
       </geometry>
       <origin xyz = "0.0 -0.0 -0.0345 " rpy = "${-pi/2} 0 0"/>
     </visual>
     <collision>
       <geometry>
         <!--- 0.0 0 -0.04 -->
-        <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint5.dae"/>
+        <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint5.dae"/>
       </geometry>
       <origin xyz = "0.0 -0.0 -0.0345 " rpy = "${-pi/2} 0 0"/>
     </collision>
@@ -125,14 +125,14 @@
       <visual>
         <geometry>
           <!--- 0.0 0 -0.04 -->
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint6.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint6.dae"/>
         </geometry>
         <origin xyz = "0 0.00 -0.038 " rpy = " 0 0 0"/>
       </visual>
         <collision>
         <geometry>
           <!--- 0.0 0 -0.04 -->
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint6.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint6.dae"/>
         </geometry>
         <origin xyz = "0 0.00 -0.038 " rpy = " 0 0 0"/>
       </collision>
@@ -143,14 +143,14 @@
       <visual>
         <geometry>
           <!--- 0.0 0 -0.04 -->
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint7.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint7.dae"/>
         </geometry>
         <origin xyz = "0.0 0 -0.012 " rpy = " 0 0 0"/>
       </visual>
         <collision>
         <geometry>
           <!--- 0.0 0 -0.04 -->
-          <mesh filename="file://$(find mycobot_description)/meshes/mycobot_280/visual/joint7.dae"/>
+          <mesh filename="package://mycobot_description/meshes/mycobot_280/visual/joint7.dae"/>
         </geometry>
         <origin xyz = "0.0 0 -0.012 " rpy = " 0 0 0"/>
       </collision>

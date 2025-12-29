@@ -9,13 +9,13 @@
       </inertial>
       <visual>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/G_base/visual/G_base.dae"/>
+          <mesh filename="package://mycobot_description/meshes/G_base/visual/G_base.dae"/>
         </geometry>
         <origin xyz = "0.0 0 -0.03" rpy = "0 0 ${pi/2}"/>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find mycobot_description)/meshes/G_base/visual/G_base.dae"/>
+          <mesh filename="package://mycobot_description/meshes/G_base/visual/G_base.dae"/>
         </geometry>
         <origin xyz = "0.0 0 -0.03" rpy = "0 0 ${pi/2}"/>
       </collision>
