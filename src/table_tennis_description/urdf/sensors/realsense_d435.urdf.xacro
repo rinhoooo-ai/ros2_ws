@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <xacro:macro name="realsense_d435" params="parent_link camera_name *origin">
+    
+    <!-- Main camera link -->
+    <link name="${camera_name}_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.025 0.090 0.025"/>
+        </geometry>
+        <material name="camera_aluminum">
+          <color rgba="0.5 0.5 0.5 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.025 0.090 0.025"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.072"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="0.000017" ixy="0.0" ixz="0.0" 
+                 iyy="0.000002" iyz="0.0" izz="0.000017"/>
+      </inertial>
+    </link>
+    
+    <!-- Joint attaching camera to parent -->
+    <joint name="${camera_name}_joint" type="fixed">
+      <parent link="${parent_link}"/>
+      <child link="${camera_name}_link"/>
+      <xacro:insert_block name="origin"/>
+    </joint>
+    
+    <!-- Depth frame -->
+    <link name="${camera_name}_depth_frame"/>
+    <joint name="${camera_name}_depth_joint" type="fixed">
+      <parent link="${camera_name}_link"/>
+      <child link="${camera_name}_depth_frame"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+    
+    <!-- Depth optical frame (X-right, Y-down, Z-forward) -->
+    <link name="${camera_name}_depth_optical_frame"/>
+    <joint name="${camera_name}_depth_optical_joint" type="fixed">
+      <parent link="${camera_name}_depth_frame"/>
+      <child link="${camera_name}_depth_optical_frame"/>
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+    
+    <!-- Color frame -->
+    <link name="${camera_name}_color_frame"/>
+    <joint name="${camera_name}_color_joint" type="fixed">
+      <parent link="${camera_name}_depth_frame"/>
+      <child link="${camera_name}_color_frame"/>
+      <origin xyz="0 0.015 0" rpy="0 0 0"/>
+    </joint>
+    
+    <!-- Color optical frame -->
+    <link name="${camera_name}_color_optical_frame"/>
+    <joint name="${camera_name}_color_optical_joint" type="fixed">
+      <parent link="${camera_name}_color_frame"/>
+      <child link="${camera_name}_color_optical_frame"/>
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+    
+    <!-- Infrared 1 frame -->
+    <link name="${camera_name}_infra1_frame"/>
+    <joint name="${camera_name}_infra1_joint" type="fixed">
+      <parent link="${camera_name}_link"/>
+      <child link="${camera_name}_infra1_frame"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+    
+    <!-- Infrared 1 optical frame -->
+    <link name="${camera_name}_infra1_optical_frame"/>
+    <joint name="${camera_name}_infra1_optical_joint" type="fixed">
+      <parent link="${camera_name}_infra1_frame"/>
+      <child link="${camera_name}_infra1_optical_frame"/>
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+    
+    <!-- Infrared 2 frame -->
+    <link name="${camera_name}_infra2_frame"/>
+    <joint name="${camera_name}_infra2_joint" type="fixed">
+      <parent link="${camera_name}_link"/>
+      <child link="${camera_name}_infra2_frame"/>
+      <origin xyz="0 -0.050 0" rpy="0 0 0"/>
+    </joint>
+    
+    <!-- Infrared 2 optical frame -->
+    <link name="${camera_name}_infra2_optical_frame"/>
+    <joint name="${camera_name}_infra2_optical_joint" type="fixed">
+      <parent link="${camera_name}_infra2_frame"/>
+      <child link="${camera_name}_infra2_optical_frame"/>
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+    
+    <!-- Gazebo sensor definition -->
+    <gazebo reference="${camera_name}_link">
+      <sensor name="${camera_name}" type="rgbd_camera">
+        <camera>
+          <horizontal_fov>1.5184</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+          </image>
+          <clip>
+            <near>0.3</near>
+            <far>10.0</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+        <visualize>true</visualize>
+        <gz_frame_id>${camera_name}_depth_optical_frame</gz_frame_id>
+        <topic>${camera_name}</topic>
+      </sensor>
+      <material>
+        <ambient>0.5 0.5 0.5 1</ambient>
+        <diffuse>0.5 0.5 0.5 1</diffuse>
+        <specular>0.2 0.2 0.2 1</specular>
+      </material>
+    </gazebo>
+    
+  </xacro:macro>
+  
+</robot>

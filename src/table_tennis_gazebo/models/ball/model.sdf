@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="table_tennis_ball">
+    <link name="ball_link">
+      
+      <!-- Inertial properties -->
+      <inertial>
+        <mass>0.0027</mass>
+        <inertia>
+          <ixx>4.32e-7</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>4.32e-7</iyy>
+          <iyz>0.0</iyz>
+          <izz>4.32e-7</izz>
+        </inertia>
+      </inertial>
+      
+      <!-- Collision properties -->
+      <collision name="collision">
+        <geometry>
+          <sphere>
+            <radius>0.020</radius>
+          </sphere>
+        </geometry>
+        <surface>
+          <contact>
+            <collide_bitmask>1</collide_bitmask>
+            <ode>
+              <kp>1000000.0</kp>
+              <kd>100.0</kd>
+              <max_vel>100.0</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0.4</mu>
+              <mu2>0.4</mu2>
+              <fdir1>0 0 0</fdir1>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+            <torsional>
+              <coefficient>0.1</coefficient>
+              <use_patch_radius>true</use_patch_radius>
+              <patch_radius>0.0</patch_radius>
+              <surface_radius>0.0</surface_radius>
+              <ode>
+                <slip>0.0</slip>
+              </ode>
+            </torsional>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0.89</restitution_coefficient>
+            <threshold>0.01</threshold>
+          </bounce>
+        </surface>
+      </collision>
+      
+      <!-- Visual properties -->
+      <visual name="visual">
+        <geometry>
+          <sphere>
+            <radius>0.020</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>1.0 0.8 0.0 1.0</ambient>
+          <diffuse>1.0 0.8 0.0 1.0</diffuse>
+          <specular>0.5 0.5 0.5 1.0</specular>
+          <emissive>0.0 0.0 0.0 1.0</emissive>
+        </material>
+      </visual>
+      
+    </link>
+  </model>
+</sdf>

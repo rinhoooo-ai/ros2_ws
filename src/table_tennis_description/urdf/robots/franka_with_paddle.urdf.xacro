@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="franka_table_tennis">
+  
+  <!-- Include Franka robot macro -->
+  <xacro:include filename="$(find franka_description)/robots/common/franka_robot.xacro"/>
+  
+  <!-- Include paddle macro -->
+  <xacro:include filename="$(find table_tennis_description)/urdf/end_effectors/paddle/paddle.urdf.xacro"/>
+  
+  <!-- Include RealSense camera macro -->
+  <xacro:include filename="$(find table_tennis_description)/urdf/sensors/realsense_d435.urdf.xacro"/>
+  
+  <!-- Define arguments (matching fr3.urdf.xacro structure) -->
+  <xacro:arg name="robot_type" default="fr3"/>
+  <xacro:arg name="arm_prefix" default=""/>
+  <xacro:arg name="no_prefix" default="false"/>
+  <xacro:arg name="hand" default="false"/>
+  <xacro:arg name="ee_id" default="franka_hand"/>
+  <xacro:arg name="special_connection" default=""/>
+  <xacro:arg name="xyz_ee" default="0 0 0"/>
+  <xacro:arg name="rpy_ee" default="0 0 -0.785398"/>
+  <xacro:arg name="tcp_xyz" default="0 0 0.1034"/>
+  <xacro:arg name="tcp_rpy" default="0 0 0"/>
+  <xacro:arg name="safety_distance" default="0.03"/>
+  <xacro:arg name="with_sc" default="false"/>
+  <xacro:arg name="ros2_control" default="true"/>
+  <xacro:arg name="robot_ip" default=""/>
+  <xacro:arg name="use_fake_hardware" default="false"/>
+  <xacro:arg name="fake_sensor_commands" default="false"/>
+  <xacro:arg name="gazebo" default="true"/>
+  <xacro:arg name="gazebo_effort" default="false"/>
+  <xacro:arg name="description_pkg" default="franka_description"/>
+  
+  <!-- Compute link prefix based on arm_prefix and robot_type -->
+  <xacro:property name="prefix" value="$(arg arm_prefix)"/>
+  <xacro:property name="modified_prefix" value="${prefix + '_' if prefix else ''}"/>
+  <xacro:property name="robot_type_val" value="$(arg robot_type)"/>
+  <xacro:property name="link_prefix" value="${modified_prefix + robot_type_val + '_'}"/>
+  
+  <!-- Instantiate Franka FR3 robot without hand -->
+  <xacro:franka_robot 
+    robot_type="fr3"
+    joint_limits="${xacro.load_yaml('$(find franka_description)/robots/fr3/joint_limits.yaml')}"
+    inertials="${xacro.load_yaml('$(find franka_description)/robots/fr3/inertials.yaml')}"
+    kinematics="${xacro.load_yaml('$(find franka_description)/robots/fr3/kinematics.yaml')}"
+    accelerometer_config="${xacro.load_yaml('$(find franka_description)/robots/fr3/accelerometers.yaml')}"
+    dynamics="${xacro.load_yaml('$(find franka_description)/robots/fr3/dynamics.yaml')}"
+    gazebo="$(arg gazebo)"
+    hand="$(arg hand)"
+    ee_id="$(arg ee_id)"
+    special_connection="$(arg special_connection)"
+    xyz_ee="$(arg xyz_ee)"
+    rpy_ee="$(arg rpy_ee)"
+    tcp_xyz="$(arg tcp_xyz)"
+    tcp_rpy="$(arg tcp_rpy)"
+    safety_distance="$(arg safety_distance)"
+    with_sc="$(arg with_sc)"
+    ros2_control="false"
+    robot_ip="$(arg robot_ip)"
+    use_fake_hardware="$(arg use_fake_hardware)"
+    fake_sensor_commands="$(arg fake_sensor_commands)"
+    gazebo_effort="$(arg gazebo_effort)"
+    no_prefix="$(arg no_prefix)"
+    arm_prefix="${modified_prefix}"
+    description_pkg="$(arg description_pkg)"
+    connected_to="base">
+  </xacro:franka_robot>
+  
+  <!-- Attach paddle to robot flange (link8) -->
+  <xacro:table_tennis_paddle arm_id="${link_prefix[:-1]}"/>
+  
+  <!-- Mount RealSense camera on link7 -->
+  <xacro:realsense_d435 parent_link="${link_prefix}link7" camera_name="${link_prefix[:-1]}_arm_cam">
+    <origin xyz="0.05 0 0.05" rpy="0 0.785 0"/>
+  </xacro:realsense_d435>
+  
+
+  
+</robot>

@@ -10,12 +10,10 @@
         </plugin>
 
         <!-- Plugin for handling user commands -->
-        <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands">
-        </plugin>
+        <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"></plugin>
 
         <!-- Plugin for broadcasting scene updates -->
-        <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster">
-        </plugin>
+        <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"></plugin>
 
         <!-- Plugin for handling sensors like the LIDAR -->
         <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
@@ -23,8 +21,7 @@
         </plugin>
 
         <!-- Plugin for IMU -->
-        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
-        </plugin>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"></plugin>
 
         <!-- To add realistic gravity, do: 0.0 0.0 -9.8, otherwise do 0.0 0.0 0.0 -->
         <gravity>0.0 0.0 -9.8</gravity>

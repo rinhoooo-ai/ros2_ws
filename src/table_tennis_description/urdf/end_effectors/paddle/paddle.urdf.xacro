@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <xacro:macro name="table_tennis_paddle" params="arm_id">
+    
+    <!-- Paddle link attached to robot flange (link8) -->
+    <link name="${arm_id}_paddle">
+      <visual>
+        <origin xyz="0 0 0.13" rpy="1.5708 0 0"/>
+        <geometry>
+          <mesh filename="package://table_tennis_description/meshes/paddle/table_tennis_racket.stl" scale="0.0023 0.0023 0.0023"/>
+        </geometry>
+        <material name="paddle_red">
+          <color rgba="0.8 0.1 0.1 1.0"/>
+        </material>
+      </visual>
+      
+      <collision>
+        <origin xyz="0 0 0.13" rpy="0 0 0"/>
+        <geometry>
+          <!-- Simplified paddle collision as single box -->
+          <box size="0.15 0.15 0.20"/>
+        </geometry>
+      </collision>
+      
+      <inertial>
+        <origin xyz="0 0 0.13" rpy="0 0 0"/>
+        <mass value="0.09"/>
+        <!-- Inertia for paddle (simplified as rectangular plate + cylinder) -->
+        <inertia 
+          ixx="0.000191" 
+          ixy="0.0" 
+          ixz="0.0" 
+          iyy="0.000196" 
+          iyz="0.0" 
+          izz="0.000368"/>
+      </inertial>
+    </link>
+    
+    <!-- Joint connecting paddle to robot flange -->
+    <joint name="${arm_id}_paddle_joint" type="fixed">
+      <parent link="${arm_id}_link8"/>
+      <child link="${arm_id}_paddle"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+    
+    <!-- Gazebo material properties for paddle -->
+    <gazebo reference="${arm_id}_paddle">
+      <material>
+        <ambient>0.8 0.1 0.1 1</ambient>
+        <diffuse>0.8 0.1 0.1 1</diffuse>
+        <specular>0.3 0.3 0.3 1</specular>
+      </material>
+      <mu1>0.8</mu1>
+      <mu2>0.8</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <self_collide>false</self_collide>
+    </gazebo>
+    
+    <!-- Disable paddle collision with robot arm links to prevent interference at home position -->
+    <gazebo>
+      <disable_link_pair link1="${arm_id}_paddle" link2="${arm_id}_link2"/>
+      <disable_link_pair link1="${arm_id}_paddle" link2="${arm_id}_link3"/>
+      <disable_link_pair link1="${arm_id}_paddle" link2="${arm_id}_link4"/>
+      <disable_link_pair link1="${arm_id}_paddle" link2="${arm_id}_link5"/>
+      <disable_link_pair link1="${arm_id}_paddle" link2="${arm_id}_link6"/>
+      <disable_link_pair link1="${arm_id}_paddle" link2="${arm_id}_link7"/>
+    </gazebo>
+    
+  </xacro:macro>
+  
+</robot>
