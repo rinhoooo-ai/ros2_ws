@@ -52,27 +52,29 @@ def generate_launch_description():
         value=f'{models_path}:{pkg_franka_description}:{pkg_description}:{os.environ.get("GZ_SIM_RESOURCE_PATH", "")}'
     )
     
-    # Process URDF for red robot
+    # Process URDF for red robot (ros2_control enabled)
     robot_description_red = xacro.process_file(
         robot_urdf_path,
         mappings={
             'robot_type': 'fr3',
             'hand': 'false',
-            'ros2_control': 'false',
+            'ros2_control': 'true',
             'gazebo': 'true',
             'use_fake_hardware': 'false',
+            'robot_namespace': 'red',
         }
     ).toxml()
     
-    # Process URDF for green robot
+    # Process URDF for green robot (ros2_control enabled)
     robot_description_green = xacro.process_file(
         robot_urdf_path,
         mappings={
             'robot_type': 'fr3',
             'hand': 'false',
-            'ros2_control': 'false',
+            'ros2_control': 'true',
             'gazebo': 'true',
             'use_fake_hardware': 'false',
+            'robot_namespace': 'green',
         }
     ).toxml()
     
@@ -187,6 +189,71 @@ def generate_launch_description():
         actions=[ball_spawner]
     )
     
+    # 5. Load controllers for red robot
+    load_joint_state_broadcaster_red = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster', '--controller-manager', '/red/controller_manager'],
+        output='screen'
+    )
+    
+    load_arm_controller_red = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['arm_controller', '--controller-manager', '/red/controller_manager'],
+        output='screen'
+    )
+    
+    delayed_load_joint_state_broadcaster_red = TimerAction(
+        period=7.0,
+        actions=[load_joint_state_broadcaster_red]
+    )
+    
+    delayed_load_arm_controller_red = TimerAction(
+        period=8.0,
+        actions=[load_arm_controller_red]
+    )
+    
+    # 6. Load controllers for green robot
+    load_joint_state_broadcaster_green = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster', '--controller-manager', '/green/controller_manager'],
+        output='screen'
+    )
+    
+    load_arm_controller_green = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['arm_controller', '--controller-manager', '/green/controller_manager'],
+        output='screen'
+    )
+    
+    delayed_load_joint_state_broadcaster_green = TimerAction(
+        period=7.5,
+        actions=[load_joint_state_broadcaster_green]
+    )
+    
+    delayed_load_arm_controller_green = TimerAction(
+        period=8.5,
+        actions=[load_arm_controller_green]
+    )
+    
+    # 7. Rviz for visualization
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        arguments=['-d', rviz_config],
+        parameters=[{'use_sim_time': True}],
+        output='screen'
+    )
+    
+    delayed_rviz = TimerAction(
+        period=10.0,
+        actions=[rviz]
+    )
+    
     return LaunchDescription([
         # Declare arguments
         DeclareLaunchArgument(
@@ -212,8 +279,17 @@ def generate_launch_description():
         # 4. Bridges (delayed)
         delayed_bridge,
         
-        # 5. Ball spawner (delayed)
+        # 5-6. Load controllers (delayed after spawn)
+        delayed_load_joint_state_broadcaster_red,
+        delayed_load_arm_controller_red,
+        delayed_load_joint_state_broadcaster_green,
+        delayed_load_arm_controller_green,
+        
+        # 7. Ball spawner (delayed)
         delayed_ball_spawner,
+        
+        # 8. Rviz (delayed)
+        delayed_rviz,
     ])
 
 

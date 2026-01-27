@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
     
-    <xacro:macro name="load_gazebo_sim_ros2_control_plugin" params="robot_name use_gazebo">
+    <xacro:macro name="load_gazebo_sim_ros2_control_plugin" params="robot_name use_gazebo namespace:=''">
         <xacro:if value="${use_gazebo}">
             <gazebo>
                 <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
                     <parameters>$(find table_tennis_gazebo)/config/controllers.yaml</parameters>
                     <ros>
-                        <namespace>${robot_name}</namespace>
+                        <namespace>${namespace}</namespace>
+                        <remapping>/robot_description:=${namespace + '/' if namespace else ''}robot_description</remapping>
                     </ros>
                 </plugin>
             </gazebo>

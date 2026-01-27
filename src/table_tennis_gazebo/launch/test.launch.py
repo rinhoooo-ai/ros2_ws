@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+"""
+Test launch file for single Franka robot with ros2_control in empty world.
+Includes Rviz and joint state publisher GUI for interactive control.
+"""
+
+import os
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable, TimerAction, DeclareLaunchArgument
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+import xacro
+
+
+def generate_launch_description():
+    """Generate launch description with single robot in empty world"""
+    
+    # Package directories
+    pkg_gazebo = get_package_share_directory('table_tennis_gazebo')
+    pkg_description = get_package_share_directory('table_tennis_description')
+    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+    pkg_franka_description = get_package_share_directory('franka_description')
+    
+    # File paths
+    world_file = os.path.join(pkg_gazebo, 'worlds', 'empty.world')
+    robot_urdf_path = os.path.join(pkg_description, 'urdf', 'robots', 'franka_with_paddle.urdf.xacro')
+    models_path = os.path.join(pkg_gazebo, 'models')
+    rviz_config = os.path.join(pkg_gazebo, 'rviz', 'single_robot.rviz')
+    
+    # Launch arguments
+    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    
+    # Set Gazebo resource path
+    set_gz_resource_path = SetEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value=f'{models_path}:{pkg_franka_description}:{pkg_description}:{os.environ.get("GZ_SIM_RESOURCE_PATH", "")}'
+    )
+    
+    # Process URDF
+    robot_description = xacro.process_file(
+        robot_urdf_path,
+        mappings={
+            'robot_type': 'fr3',
+            'hand': 'false',
+            'ros2_control': 'true',
+            'gazebo': 'true',
+            'use_fake_hardware': 'false',
+        }
+    ).toxml()
+    
+    # Launch Gazebo
+    gazebo = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
+        ),
+        launch_arguments={'gz_args': f'{world_file} -r'}.items(),
+    )
+    
+    # Robot state publisher
+    robot_state_pub = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[
+            {'use_sim_time': True},
+            {'robot_description': robot_description}
+        ],
+    )
+    
+    delayed_robot_state_pub = TimerAction(
+        period=3.0,
+        actions=[robot_state_pub]
+    )
+    
+    # Spawn robot at origin
+    spawn_robot = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=[
+            '-name', 'test_robot',
+            '-topic', '/robot_description',
+            '-x', '0.0',
+            '-y', '0.0',
+            '-z', '0.0',
+        ],
+        output='screen'
+    )
+    
+    delayed_spawn = TimerAction(
+        period=5.0,
+        actions=[spawn_robot]
+    )
+    
+    # Joint state publisher GUI for interactive control
+    joint_state_publisher_gui = Node(
+        package='joint_state_publisher_gui',
+        executable='joint_state_publisher_gui',
+        name='joint_state_publisher_gui',
+        parameters=[{'use_sim_time': True}],
+        output='screen'
+    )
+    
+    delayed_joint_state_pub_gui = TimerAction(
+        period=6.0,
+        actions=[joint_state_publisher_gui]
+    )
+    
+    # Rviz for visualization
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        arguments=['-d', rviz_config],
+        parameters=[{'use_sim_time': True}],
+        output='screen'
+    )
+    
+    delayed_rviz = TimerAction(
+        period=6.0,
+        actions=[rviz]
+    )
+    
+    # Controller spawners
+    load_joint_state_broadcaster = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster'],
+        output='screen',
+    )
+    
+    load_arm_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['arm_controller'],
+        output='screen',
+    )
+    
+    delayed_load_joint_state_broadcaster = TimerAction(
+        period=7.0,
+        actions=[load_joint_state_broadcaster]
+    )
+    
+    delayed_load_arm_controller = TimerAction(
+        period=8.0,
+        actions=[load_arm_controller]
+    )
+    
+    return LaunchDescription([
+        DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='true',
+            description='Use simulation time'
+        ),
+        set_gz_resource_path,
+        gazebo,
+        delayed_robot_state_pub,
+        delayed_spawn,
+        delayed_joint_state_pub_gui,
+        delayed_rviz,
+        delayed_load_joint_state_broadcaster,
+        delayed_load_arm_controller,
+    ])
