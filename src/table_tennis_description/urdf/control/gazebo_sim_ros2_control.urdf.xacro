@@ -5,7 +5,13 @@
         <xacro:if value="${use_gazebo}">
             <gazebo>
                 <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-                    <parameters>$(find table_tennis_gazebo)/config/controllers.yaml</parameters>
+                    <!-- CRITICAL: Use wildcarded YAML for namespace support -->
+                    <parameters>$(find table_tennis_gazebo)/config/controllers_namespaced.yaml</parameters>
+                    
+                    <!-- Optional: keep default controller_manager name -->
+                    <controller_manager_name>controller_manager</controller_manager_name>
+                    
+                    <!-- CRITICAL: namespace must NOT have leading slash -->
                     <ros>
                         <namespace>${namespace}</namespace>
                         <remapping>/robot_description:=${namespace + '/' if namespace else ''}robot_description</remapping>
