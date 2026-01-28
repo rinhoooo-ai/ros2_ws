@@ -41,7 +41,8 @@ def generate_launch_description():
     world_file = os.path.join(pkg_gazebo, 'worlds', 'arena.world')
     robot_urdf_path = os.path.join(pkg_description, 'urdf', 'robots', 'franka_with_paddle.urdf.xacro')
     models_path = os.path.join(pkg_gazebo, 'models')
-    rviz_config = os.path.join(pkg_gazebo, 'rviz', 'dual_robots.rviz')
+    rviz_config_red = os.path.join(pkg_gazebo, 'rviz', 'red_robot.rviz')
+    rviz_config_green = os.path.join(pkg_gazebo, 'rviz', 'green_robot.rviz')
     
     # Launch arguments
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
@@ -193,24 +194,28 @@ def generate_launch_description():
     load_joint_state_broadcaster_red = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/red/controller_manager'],
+        arguments=['joint_state_broadcaster', 
+                   '--controller-manager', '/red/controller_manager'],
+        parameters=[{'use_sim_time': use_sim_time}],
         output='screen'
     )
     
     load_arm_controller_red = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['arm_controller', '--controller-manager', '/red/controller_manager'],
+        arguments=['arm_controller', 
+                   '--controller-manager', '/red/controller_manager'],
+        parameters=[{'use_sim_time': use_sim_time}],
         output='screen'
     )
     
     delayed_load_joint_state_broadcaster_red = TimerAction(
-        period=7.0,
+        period=10.0,
         actions=[load_joint_state_broadcaster_red]
     )
     
     delayed_load_arm_controller_red = TimerAction(
-        period=8.0,
+        period=11.0,
         actions=[load_arm_controller_red]
     )
     
@@ -218,40 +223,60 @@ def generate_launch_description():
     load_joint_state_broadcaster_green = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '--controller-manager', '/green/controller_manager'],
+        arguments=['joint_state_broadcaster', 
+                   '--controller-manager', '/green/controller_manager'],
+        parameters=[{'use_sim_time': use_sim_time}],
         output='screen'
     )
     
     load_arm_controller_green = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['arm_controller', '--controller-manager', '/green/controller_manager'],
+        arguments=['arm_controller', 
+                   '--controller-manager', '/green/controller_manager'],
+        parameters=[{'use_sim_time': use_sim_time}],
         output='screen'
     )
     
     delayed_load_joint_state_broadcaster_green = TimerAction(
-        period=7.5,
+        period=10.5,
         actions=[load_joint_state_broadcaster_green]
     )
     
     delayed_load_arm_controller_green = TimerAction(
-        period=8.5,
+        period=11.5,
         actions=[load_arm_controller_green]
     )
     
-    # 7. Rviz for visualization
-    rviz = Node(
+    # 7. Rviz for visualization (two separate windows)
+    rviz_red = Node(
         package='rviz2',
         executable='rviz2',
-        name='rviz2',
-        arguments=['-d', rviz_config],
+        name='rviz2_red',
+        namespace='red',
+        arguments=['-d', rviz_config_red],
         parameters=[{'use_sim_time': True}],
         output='screen'
     )
     
-    delayed_rviz = TimerAction(
+    rviz_green = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2_green',
+        namespace='green',
+        arguments=['-d', rviz_config_green],
+        parameters=[{'use_sim_time': True}],
+        output='screen'
+    )
+    
+    delayed_rviz_red = TimerAction(
         period=10.0,
-        actions=[rviz]
+        actions=[rviz_red]
+    )
+    
+    delayed_rviz_green = TimerAction(
+        period=10.5,
+        actions=[rviz_green]
     )
     
     return LaunchDescription([
@@ -288,8 +313,9 @@ def generate_launch_description():
         # 7. Ball spawner (delayed)
         delayed_ball_spawner,
         
-        # 8. Rviz (delayed)
-        delayed_rviz,
+        # 8. Rviz windows (delayed) - one for each robot
+        delayed_rviz_red,
+        delayed_rviz_green,
     ])
 
 
