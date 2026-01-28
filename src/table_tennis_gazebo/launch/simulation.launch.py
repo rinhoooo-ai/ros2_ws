@@ -96,7 +96,8 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': True},
-            {'robot_description': robot_description_red}
+            {'robot_description': robot_description_red},
+            {'frame_prefix': 'red/'},  # Avoid TF frame collisions
         ],
     )
     
@@ -108,7 +109,8 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': True},
-            {'robot_description': robot_description_green}
+            {'robot_description': robot_description_green},
+            {'frame_prefix': 'green/'},  # Avoid TF frame collisions
         ],
     )
     
