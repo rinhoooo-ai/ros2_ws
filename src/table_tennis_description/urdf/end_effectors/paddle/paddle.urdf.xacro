@@ -16,10 +16,10 @@
       </visual>
       
       <collision>
-        <origin xyz="0 0 0.13" rpy="0 0 0"/>
+        <origin xyz="0 0 0.13" rpy="1.5708 0 0"/>
         <geometry>
-          <!-- Simplified paddle collision as single box -->
-          <box size="0.15 0.15 0.20"/>
+          <!-- Use same mesh as visual for accurate collision -->
+          <mesh filename="package://table_tennis_description/meshes/paddle/table_tennis_racket.stl" scale="0.0023 0.0023 0.0023"/>
         </geometry>
       </collision>
       

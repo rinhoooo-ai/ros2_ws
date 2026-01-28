@@ -60,7 +60,17 @@ def generate_launch_description():
         launch_arguments={'gz_args': f'{world_file} -r'}.items(),
     )
     
-    # Robot state publisher
+    # Clock bridge - required for use_sim_time to work
+    clock_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='clock_bridge',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
+        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock']
+    )
+    
+    # Robot state publisher - required for TF tree
     robot_state_pub = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -111,27 +121,29 @@ def generate_launch_description():
         actions=[rviz]
     )
     
-    # Controller spawners
+    # Load and activate controllers
     load_joint_state_broadcaster = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster'],
-        output='screen',
+        arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
+        parameters=[{'use_sim_time': use_sim_time}],
+        output='screen'
     )
     
     load_arm_controller = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['arm_controller'],
-        output='screen',
+        arguments=['arm_controller', '--controller-manager', '/controller_manager'],
+        parameters=[{'use_sim_time': use_sim_time}],
+        output='screen'
     )
     
-    delayed_load_joint_state_broadcaster = TimerAction(
+    delayed_load_joint_state = TimerAction(
         period=7.0,
         actions=[load_joint_state_broadcaster]
     )
     
-    delayed_load_arm_controller = TimerAction(
+    delayed_load_arm = TimerAction(
         period=8.0,
         actions=[load_arm_controller]
     )
@@ -144,9 +156,10 @@ def generate_launch_description():
         ),
         set_gz_resource_path,
         gazebo,
+        clock_bridge,
         delayed_robot_state_pub,
         delayed_spawn,
         delayed_rviz,
-        delayed_load_joint_state_broadcaster,
-        delayed_load_arm_controller,
+        delayed_load_joint_state,
+        delayed_load_arm,
     ])
