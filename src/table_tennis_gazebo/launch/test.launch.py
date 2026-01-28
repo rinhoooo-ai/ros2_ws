@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 Test launch file for single Franka robot with ros2_control in empty world.
-Includes Rviz and joint state publisher GUI for interactive control.
+Includes Rviz for visualization. Robot is controlled via ros2_control.
+
+To move the robot, send trajectory commands to arm_controller.
 """
 
 import os
@@ -94,20 +96,6 @@ def generate_launch_description():
         actions=[spawn_robot]
     )
     
-    # Joint state publisher GUI for interactive control
-    joint_state_publisher_gui = Node(
-        package='joint_state_publisher_gui',
-        executable='joint_state_publisher_gui',
-        name='joint_state_publisher_gui',
-        parameters=[{'use_sim_time': True}],
-        output='screen'
-    )
-    
-    delayed_joint_state_pub_gui = TimerAction(
-        period=6.0,
-        actions=[joint_state_publisher_gui]
-    )
-    
     # Rviz for visualization
     rviz = Node(
         package='rviz2',
@@ -158,7 +146,6 @@ def generate_launch_description():
         gazebo,
         delayed_robot_state_pub,
         delayed_spawn,
-        delayed_joint_state_pub_gui,
         delayed_rviz,
         delayed_load_joint_state_broadcaster,
         delayed_load_arm_controller,

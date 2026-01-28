@@ -40,6 +40,7 @@
   <xacro:property name="link_prefix" value="${modified_prefix + robot_type_val + '_'}"/>
   
   <!-- Instantiate Franka FR3 robot without hand -->
+  <!-- The franka_robot macro will create the world link when connected_to="world" -->
   <xacro:franka_robot 
     robot_type="fr3"
     joint_limits="${xacro.load_yaml('$(find franka_description)/robots/fr3/joint_limits.yaml')}"
@@ -65,7 +66,7 @@
     no_prefix="$(arg no_prefix)"
     arm_prefix="${modified_prefix}"
     description_pkg="$(arg description_pkg)"
-    connected_to="base">
+    connected_to="world">
   </xacro:franka_robot>
   
   <!-- Attach paddle to robot flange (link8) -->
