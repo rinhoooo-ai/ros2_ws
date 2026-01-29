@@ -7,7 +7,7 @@ Important commands:
 `source ~/.bashrc && ros2 launch table_tennis_gazebo ball_spawn.launch.py x:=0.3 y:=0.5 z:=2.0`
 
 ```
-ros2 action send_goal /red/arm_controller/follow_joint_trajectory control_msgs/action/FollowJointTrajectory "{
+ros2 action send_goal /<red or green>/arm_controller/follow_joint_trajectory control_msgs/action/FollowJointTrajectory "{
   trajectory: {
     joint_names: ['fr3_joint1', 'fr3_joint2', 'fr3_joint3', 'fr3_joint4', 'fr3_joint5', 'fr3_joint6', 'fr3_joint7'],
     points: [
