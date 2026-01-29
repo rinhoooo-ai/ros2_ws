@@ -195,11 +195,15 @@ private:
 
       // Check deletion conditions
       double time_alive = (this->now() - spawn_time_).seconds();
-      bool hit_ground = current_ball_pose_.position.z < 0.01;
-      bool is_stationary = (time_alive > 0.5) && (current_velocity_magnitude_ < 0.01);  // After 0.5s, check if velocity < 0.01 m/s
+      // Ball radius is 0.02m, ground is at z=0
+      // When ball is on ground, center should be at z=0.02, but may sink slightly
+      // Also check if ball is below table (table top is at z=0.76)
+      bool hit_ground = current_ball_pose_.position.z < 0.05;  // Increased threshold to catch ball on ground
+      bool below_table = current_ball_pose_.position.z < 0.65;  // If below table, it's on the ground
+      bool is_stationary = (time_alive > 1.0) && (current_velocity_magnitude_ < 0.005);  // After 1s, check if velocity < 0.005 m/s
       
-      if (hit_ground || is_stationary) {
-        if (hit_ground) {
+      if (hit_ground || below_table || is_stationary) {
+        if (hit_ground || below_table) {
           RCLCPP_INFO(this->get_logger(), "Ball hit the ground! z=%.4f", current_ball_pose_.position.z);
         } else {
           RCLCPP_INFO(this->get_logger(), "Ball became stationary! velocity=%.4f m/s", current_velocity_magnitude_);
@@ -211,7 +215,7 @@ private:
         ball_status_pub_->publish(status_msg);
 
         // Set result with proper status
-        result->final_status = hit_ground ? "hit_ground" : "stationary";
+        result->final_status = (hit_ground || below_table) ? "hit_ground" : "stationary";
         result->final_x = current_ball_pose_.position.x;
         result->final_y = current_ball_pose_.position.y;
         result->final_z = current_ball_pose_.position.z;
