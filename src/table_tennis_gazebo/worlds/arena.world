@@ -64,12 +64,12 @@
           <surface>
             <friction>
               <ode>
-                <mu>0.6</mu>
-                <mu2>0.6</mu2>
+                <mu>0.8</mu>
+                <mu2>0.8</mu2>
               </ode>
             </friction>
             <bounce>
-              <restitution_coefficient>0.5</restitution_coefficient>
+              <restitution_coefficient>0.3</restitution_coefficient>
               <threshold>0.01</threshold>
             </bounce>
           </surface>
@@ -107,8 +107,8 @@
           <surface>
             <friction>
               <ode>
-                <mu>0.35</mu>
-                <mu2>0.35</mu2>
+                <mu>0.45</mu>
+                <mu2>0.45</mu2>
               </ode>
             </friction>
             <bounce>
@@ -139,6 +139,18 @@
               <size>0.01 1.83 0.1525</size>
             </box>
           </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.5</mu>
+                <mu2>0.5</mu2>
+              </ode>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0.6</restitution_coefficient>
+              <threshold>0.01</threshold>
+            </bounce>
+          </surface>
         </collision>
         <visual name="visual">
           <geometry>
