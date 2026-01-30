@@ -59,6 +59,7 @@ install(
 
 # Install scripts
 install(PROGRAMS
+  scripts/ball_spawner_node.py
   scripts/ball_spawn_client.py
   DESTINATION lib/${PROJECT_NAME}
 )
