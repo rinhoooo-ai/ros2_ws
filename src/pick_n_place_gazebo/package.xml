@@ -1,43 +1,29 @@
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>pick_n_place_gazebo</name>
   <version>0.1.0</version>
   <description>Gazebo simulation for industrial robot pick and place</description>
-  <maintainer email="user@todo.todo">Hung Dang Pham</maintainer>
+  <maintainer email="hungdangpham.ai@gmail.com">Hung Dang Pham</maintainer>
   <license>MIT</license>
 
+  <!-- Build system -->
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <buildtool_depend>rosidl_default_generators</buildtool_depend>
 
-  <depend>rclcpp</depend>
-  <depend>rclcpp_action</depend>
-  <depend>geometry_msgs</depend>
-  <depend>std_msgs</depend>
-  <depend>std_srvs</depend>
-  <depend>ros_gz</depend>
+  <!-- Runtime dependencies -->
   <depend>ros_gz_sim</depend>
   <depend>ros_gz_bridge</depend>
-  <depend>ros_gz_image</depend>
-  <depend>ros_gz_interfaces</depend>
-  <depend>sdformat_urdf</depend>
   <depend>controller_manager</depend>
   <depend>joint_trajectory_controller</depend>
   <depend>joint_state_broadcaster</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>xacro</depend>
+
+  <!-- Robot descriptions -->
   <depend>pick_n_place_description</depend>
   <depend>franka_description</depend>
 
-  <exec_depend>rosidl_default_runtime</exec_depend>
-  <exec_depend>xacro</exec_depend>
-  <exec_depend>robot_state_publisher</exec_depend>
-  <exec_depend>joint_state_publisher</exec_depend>
-  <exec_depend>joint_state_publisher_gui</exec_depend>
-  <exec_depend>ros2controlcli</exec_depend>
-
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
-
-  <member_of_group>rosidl_interface_packages</member_of_group>
+  <!-- RViz -->
+  <depend>rviz2</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
