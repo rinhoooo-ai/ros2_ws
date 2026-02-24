@@ -1,0 +1,163 @@
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/point.hpp>
+#include <ros_gz_interfaces/srv/control_world.hpp>
+#include "table_tennis_gazebo/srv/spawn_ball.hpp"
+
+#include <fstream>
+#include <sstream>
+#include <chrono>
+
+class BallSpawnerNode : public rclcpp::Node
+{
+public:
+  BallSpawnerNode() : Node("ball_spawner_node")
+  {
+    // Create service
+    spawn_service_ = this->create_service<table_tennis_gazebo::srv::SpawnBall>(
+      "~/spawn_ball",
+      std::bind(&BallSpawnerNode::spawnBallCallback, this, 
+                std::placeholders::_1, std::placeholders::_2));
+    
+    // Create client for Gazebo world control
+    gz_create_client_ = this->create_client<ros_gz_interfaces::srv::ControlWorld>(
+      "/world/arena/control");
+    
+    // Wait for Gazebo service
+    while (!gz_create_client_->wait_for_service(std::chrono::seconds(1))) {
+      if (!rclcpp::ok()) {
+        RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for Gazebo service");
+        return;
+      }
+      RCLCPP_INFO(this->get_logger(), "Waiting for Gazebo world control service...");
+    }
+    
+    RCLCPP_INFO(this->get_logger(), "Ball spawner node initialized");
+  }
+
+private:
+  void spawnBallCallback(
+    const std::shared_ptr<table_tennis_gazebo::srv::SpawnBall::Request> request,
+    std::shared_ptr<table_tennis_gazebo::srv::SpawnBall::Response> response)
+  {
+    RCLCPP_INFO(this->get_logger(), "Spawn ball request received at position: [%.3f, %.3f, %.3f]",
+                request->position.x, request->position.y, request->position.z);
+    
+    // Check if position is valid
+    if (request->position.z < 0.0) {
+      response->success = false;
+      response->message = "Invalid spawn position: z coordinate must be positive";
+      RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
+      return;
+    }
+    
+    // TODO: Check for existing ball and remove it
+    // For now, we'll just spawn a new ball with a timestamp-based name
+    
+    // Generate unique ball name with timestamp
+    auto now = std::chrono::system_clock::now();
+    auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(
+      now.time_since_epoch()).count();
+    std::string ball_name = "table_tennis_ball_" + std::to_string(timestamp);
+    
+    // Create SDF string for the ball
+    std::stringstream sdf_stream;
+    sdf_stream << "<?xml version='1.0'?>"
+               << "<sdf version='1.7'>"
+               << "  <model name='" << ball_name << "'>"
+               << "    <pose>" << request->position.x << " " 
+               << request->position.y << " " << request->position.z 
+               << " 0 0 0</pose>"
+               << "    <link name='ball_link'>"
+               << "      <inertial>"
+               << "        <mass>0.0027</mass>"
+               << "        <inertia>"
+               << "          <ixx>4.32e-7</ixx>"
+               << "          <ixy>0.0</ixy>"
+               << "          <ixz>0.0</ixz>"
+               << "          <iyy>4.32e-7</iyy>"
+               << "          <iyz>0.0</iyz>"
+               << "          <izz>4.32e-7</izz>"
+               << "        </inertia>"
+               << "      </inertial>"
+               << "      <collision name='collision'>"
+               << "        <geometry>"
+               << "          <sphere><radius>0.020</radius></sphere>"
+               << "        </geometry>"
+               << "        <surface>"
+               << "          <contact>"
+               << "            <collide_bitmask>1</collide_bitmask>"
+               << "            <ode>"
+               << "              <kp>1000000.0</kp>"
+               << "              <kd>100.0</kd>"
+               << "              <max_vel>100.0</max_vel>"
+               << "              <min_depth>0.001</min_depth>"
+               << "            </ode>"
+               << "          </contact>"
+               << "          <friction>"
+               << "            <ode>"
+               << "              <mu>0.4</mu>"
+               << "              <mu2>0.4</mu2>"
+               << "              <fdir1>0 0 0</fdir1>"
+               << "              <slip1>0.0</slip1>"
+               << "              <slip2>0.0</slip2>"
+               << "            </ode>"
+               << "            <torsional>"
+               << "              <coefficient>0.1</coefficient>"
+               << "              <use_patch_radius>true</use_patch_radius>"
+               << "              <patch_radius>0.0</patch_radius>"
+               << "              <surface_radius>0.0</surface_radius>"
+               << "              <ode><slip>0.0</slip></ode>"
+               << "            </torsional>"
+               << "          </friction>"
+               << "          <bounce>"
+               << "            <restitution_coefficient>0.89</restitution_coefficient>"
+               << "            <threshold>0.01</threshold>"
+               << "          </bounce>"
+               << "        </surface>"
+               << "      </collision>"
+               << "      <visual name='visual'>"
+               << "        <geometry>"
+               << "          <sphere><radius>0.020</radius></sphere>"
+               << "        </geometry>"
+               << "        <material>"
+               << "          <ambient>1.0 0.8 0.0 1.0</ambient>"
+               << "          <diffuse>1.0 0.8 0.0 1.0</diffuse>"
+               << "          <specular>0.5 0.5 0.5 1.0</specular>"
+               << "          <emissive>0.0 0.0 0.0 1.0</emissive>"
+               << "        </material>"
+               << "      </visual>"
+               << "    </link>"
+               << "  </model>"
+               << "</sdf>";
+    
+    // Create request for Gazebo
+    auto gz_request = std::make_shared<ros_gz_interfaces::srv::ControlWorld::Request>();
+    gz_request->world_control.multi_step = 0;
+    gz_request->world_control.reset.all = false;
+    gz_request->world_control.seed = 0;
+    gz_request->world_control.run_to_sim_time.sec = 0;
+    gz_request->world_control.run_to_sim_time.nanosec = 0;
+    
+    // Note: ControlWorld service doesn't directly support entity creation
+    // We need to use a different approach - this is a placeholder
+    // The actual implementation would use gz::msgs::EntityFactory via ros_gz_bridge
+    
+    RCLCPP_WARN(this->get_logger(), "Ball spawning implementation needs gz.msgs.EntityFactory service");
+    RCLCPP_INFO(this->get_logger(), "Generated SDF for ball: %s", ball_name.c_str());
+    
+    response->success = true;
+    response->message = "Ball spawn request processed (implementation pending)";
+  }
+
+  rclcpp::Service<table_tennis_gazebo::srv::SpawnBall>::SharedPtr spawn_service_;
+  rclcpp::Client<ros_gz_interfaces::srv::ControlWorld>::SharedPtr gz_create_client_;
+};
+
+int main(int argc, char** argv)
+{
+  rclcpp::init(argc, argv);
+  auto node = std::make_shared<BallSpawnerNode>();
+  rclcpp::spin(node);
+  rclcpp::shutdown();
+  return 0;
+}
