@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>table_tennis_gazebo</name>
+  <name>pick_n_place_gazebo</name>
   <version>0.1.0</version>
-  <description>Gazebo simulation for table tennis playing robots</description>
-  <maintainer email="user@todo.todo">Bhavya Shah</maintainer>
+  <description>Gazebo simulation for industrial robot pick and place</description>
+  <maintainer email="user@todo.todo">Hung Dang Pham</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -24,7 +24,7 @@
   <depend>controller_manager</depend>
   <depend>joint_trajectory_controller</depend>
   <depend>joint_state_broadcaster</depend>
-  <depend>table_tennis_description</depend>
+  <depend>pick_n_place_description</depend>
   <depend>franka_description</depend>
 
   <exec_depend>rosidl_default_runtime</exec_depend>
