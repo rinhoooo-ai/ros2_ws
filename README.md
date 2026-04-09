@@ -79,7 +79,7 @@ The state machine autonomously sorts 4 colored blocks into their matching bins:
 SCAN → detect block → PICK → PLACE → HOME → repeat
 ```
 
-- **SCAN**: Rotates joint1 through 8 positions (0°, 45°, 90°, 135°, 180°, -135°, -90°, -45°) to find any unsorted block
+- **SCAN**: Rotates joint1 through 4 positions (0°, 90°, 180°, -90°) to find any unsorted block
 - **PICK**: Pre-grasp → re-read pose → grasp → close gripper → lift
 - **PLACE**: Move above correct bin → lower → release
 - **HOME**: Return to home → start next scan
