@@ -119,7 +119,8 @@ def generate_launch_description():
         package='ros_gz_bridge',
         executable='parameter_bridge',
         name='clock_bridge',
-        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        arguments=['/world/pick_and_place/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        remappings=[('/world/pick_and_place/clock', '/clock')],
         output='screen',
     )
     
@@ -171,6 +172,20 @@ def generate_launch_description():
         parameters=[
             {'use_sim_time': True},
         ],
+        output='screen',
+    )
+
+    # ROS-Gazebo bridge for wrist camera (FR3 cam)
+    bridge_fr3_cam = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='fr3_cam_bridge',
+        arguments=[
+            '/fr3_cam/image@sensor_msgs/msg/Image[gz.msgs.Image',
+            '/fr3_cam/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
+            '/fr3_cam/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
+        ],
+        parameters=[{'use_sim_time': True}],
         output='screen',
     )
     
@@ -241,7 +256,7 @@ def generate_launch_description():
         # t=3s: Start camera bridges
         TimerAction(
             period=3.0,
-            actions=[bridge_camera, bridge_camera_info, bridge_depth]
+            actions=[bridge_camera, bridge_camera_info, bridge_depth, bridge_fr3_cam]
         ),
         
         # t=4s: Spawn robot

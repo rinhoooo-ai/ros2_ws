@@ -1,6 +1,6 @@
 Panels:
   - Class: rviz_common/Displays
-    Help Height: 78
+    Help Height: 70
     Name: Displays
     Property Tree Widget:
       Expanded:
@@ -8,7 +8,7 @@ Panels:
         - /TF1
         - /Camera1
       Splitter Ratio: 0.5
-    Tree Height: 549
+    Tree Height: 70
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -45,16 +45,66 @@ Visualization Manager:
       Value: true
     - Class: rviz_default_plugins/TF
       Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
         All Enabled: true
-      Marker Scale: 0.2
+        fr3_hand:
+          Value: true
+        fr3_hand_tcp:
+          Value: true
+        fr3_leftfinger:
+          Value: true
+        fr3_link0:
+          Value: true
+        fr3_link1:
+          Value: true
+        fr3_link2:
+          Value: true
+        fr3_link3:
+          Value: true
+        fr3_link4:
+          Value: true
+        fr3_link5:
+          Value: true
+        fr3_link6:
+          Value: true
+        fr3_link7:
+          Value: true
+        fr3_link8:
+          Value: true
+        fr3_rightfinger:
+          Value: true
+        overhead_camera/link/camera:
+          Value: true
+        world:
+          Value: true
+      Marker Scale: 0.20000000298023224
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        world:
+          fr3_link0:
+            fr3_link1:
+              fr3_link2:
+                fr3_link3:
+                  fr3_link4:
+                    fr3_link5:
+                      fr3_link6:
+                        fr3_link7:
+                          fr3_link8:
+                            fr3_hand:
+                              fr3_hand_tcp:
+                                {}
+                              fr3_leftfinger:
+                                {}
+                              fr3_rightfinger:
+                                {}
+          overhead_camera/link/camera:
+            {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -75,6 +125,73 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        fr3_hand:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_hand_tcp:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        fr3_leftfinger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_link0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_link1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_link2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_link3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_link4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_link5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_link6:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_link7:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fr3_link8:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        fr3_rightfinger:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
       Mass Properties:
         Inertia: false
         Mass: false
@@ -98,6 +215,7 @@ Visualization Manager:
       Value: true
       Visibility:
         Grid: true
+        Image: true
         RobotModel: true
         TF: true
         Value: true
@@ -169,7 +287,7 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.3
+        X: 0.30000001192092896
         Y: 0
         Z: 0.5
       Focal Shape Fixed Size: true
@@ -180,5 +298,25 @@ Visualization Manager:
       Pitch: 0.5
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.785
+      Yaw: 0.7850000262260437
     Saved: ~
+Window Geometry:
+  Camera:
+    collapsed: false
+  Displays:
+    collapsed: false
+  Height: 703
+  Hide Left Dock: false
+  Hide Right Dock: false
+  Image:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd00000001000000000000019b00000269fc0200000006fb0000000a0049006d006100670065010000003b000000160000001600fffffffb0000000c00430061006d0065007200610100000057000000160000001600fffffffb000000100044006900730070006c0061007900730100000073000000c7000000c700fffffffb0000001200530065006c0065006300740069006f006e01000001400000005c0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007301000001a20000005c0000005c00fffffffb0000000a005600690065007700730100000204000000a0000000a000ffffff0000021d0000026900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: false
+  Width: 958
+  X: 403
+  Y: 127

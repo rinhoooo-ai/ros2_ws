@@ -60,4 +60,7 @@
     <xacro:gazebo_ros2_control arm_prefix="$(arg arm_prefix)"/>
   </xacro:if>
 
+  <!-- Wrist camera -->
+  <xacro:include filename="$(find simple_pick_and_place_description)/urdf/camera/camera.urdf.xacro"/>
+  <xacro:wrist_camera arm_prefix="$(arg arm_prefix)"/>
 </robot>
