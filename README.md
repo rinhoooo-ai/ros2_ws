@@ -1,6 +1,6 @@
 # Franka FR3 Pick-and-Place Simulation
 
-## ✅ FULLY WORKING — Challenge 6: State Machine Multi-Block Sorting
+## ✅ FULLY WORKING 
 
 Complete simulation with autonomous multi-block color sorting using Gazebo Harmonic + ROS 2 Jazzy.
 
