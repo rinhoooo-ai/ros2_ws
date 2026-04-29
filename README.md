@@ -195,5 +195,3 @@ ros2_ws/src/
 - [ros2_control](https://control.ros.org/)
 
 ---
-
-*Last Updated: April 2026*
