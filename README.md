@@ -1,6 +1,5 @@
 # Franka FR3 Pick-and-Place Simulation
 
-## ✅ FULLY WORKING 
 
 Complete simulation with autonomous multi-block color sorting using Gazebo Harmonic + ROS 2 Jazzy.
 
