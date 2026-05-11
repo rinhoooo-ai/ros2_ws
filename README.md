@@ -1,7 +1,10 @@
 # Franka FR3 Pick-and-Place Simulation
 
-
 Complete simulation with autonomous multi-block color sorting using Gazebo Harmonic + ROS 2 Jazzy.
+
+## Demo
+
+[![Franka FR3 Pick-and-Place Demo](https://img.youtube.com/vi/y0wR3j1XnKg/0.jpg)](https://youtu.be/y0wR3j1XnKg)
 
 ---
 
@@ -118,7 +121,7 @@ ros2 action send_goal /gripper_controller/gripper_cmd control_msgs/action/Grippe
 
 **Close gripper:**
 ```bash
-ros2 action send_goal /gripper_controller/gripper_cmd control_msgs/action/GripperCommand \
+ros2 action send_goal /mnt/user-data/gripper_controller/gripper_cmd control_msgs/action/GripperCommand \
   "{command: {position: 0.02, max_effort: 15.0}}"
 ```
 
@@ -156,7 +159,7 @@ cd ..
 colcon build --packages-up-to gz_ros2_control simple_pick_and_place_gazebo
 ```
 
-### 3. Gripper Kẹp Chéo (joint7 Issue)
+### 3. Gripper Misalignment (joint7 Issue)
 **Problem:** ikpy seed had joint7=0.785 rad (45°), gripper rotated 45° relative to block  
 **Fix:** Changed `IK_SEED` joint7 from `0.785` → `0.0` and override joint7=0.0 after every IK solve
 
@@ -193,5 +196,3 @@ ros2_ws/src/
 - [Gazebo Harmonic](https://gazebosim.org/docs/harmonic)
 - [Franka Robotics](https://frankaemika.github.io/docs/)
 - [ros2_control](https://control.ros.org/)
-
----
